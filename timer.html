@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="timer-container">
+        <h1 id="timer">00:00:00</h1>
+        <div class="inputs">
+            <p>
+            <input type="number" id="hours" min="0" placeholder="Hours" />
+            <input type="number" id="minutes" min="0" max="59" placeholder="Minutes" />
+            <input type="number" id="seconds" min="0" max="59" placeholder="Seconds" /></p>
+        </div>
+        <div class="controls">
+            <button id="start-btn">Start</button>
+            <button id="stop-btn">Stop</button>
+            <button id="reset-btn">Reset</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+    /* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center ;
+    height: 100vh;
+    margin: 20px;
+    background-image: url("https://images.pond5.com/countdown-timer-modern-blue-background-footage-055277158_iconl.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position:0cm ;
+}
+
+.timer-container {
+    text-align: center;
+    background: transparent;
+    border-radius: 10px;
+    padding: 5cm;
+    box-shadow: black;
+    
+}
+
+#timer {
+    font-size: 2rem;
+    margin: 20px 0;
+}
+
+.inputs {
+    margin: flex;
+}
+
+.inputs label {
+    display: block;
+    margin: 10px 0;
+}
+
+.inputs input {
+    width: 70px;
+    padding: 5px;
+    margin: 0 10px;
+    font-size: default;
+    border-radius:0dvh;
+}
+
+.controls button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+#start-btn { background-color:rgb(38, 188, 242); }
+#start-btn:hover { background-color:#007bb5; }
+
+#stop-btn { background-color:rgb(38, 188, 242); }
+#stop-btn:hover { background-color:#007bb5; }
+
+#reset-btn { background-color: rgb(38, 188, 242); }
+#reset-btn:hover { background-color: #007bb5; }
+
+#restart-btn { background-color: #ff9800; }
+#restart-btn:hover { background-color: #e68900; }
+
+</style>
+
+<script>
+    // script.js
+let timerInterval;
+let remainingTime = 0; // Time in seconds
+
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+function updateTimerDisplay() {
+    document.getElementById('timer').textContent = formatTime(remainingTime);
+}
+
+function calculateTotalSeconds(hours, minutes, seconds) {
+    return (parseInt(hours) || 0) * 3600 + (parseInt(minutes) || 0) * 60 + (parseInt(seconds) || 0);
+}
+
+function startTimer() {
+    if (timerInterval) return; // Prevent multiple intervals
+
+    const hours = document.getElementById('hours').value;
+    const minutes = document.getElementById('minutes').value;
+    const seconds = document.getElementById('seconds').value;
+
+    remainingTime = calculateTotalSeconds(hours, minutes, seconds);
+    updateTimerDisplay();
+
+    timerInterval = setInterval(() => {
+        if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            return;
+        }
+        remainingTime--;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer() {
+    stopTimer();
+    document.getElementById('hours').value = '';
+    document.getElementById('minutes').value = '';
+    document.getElementById('seconds').value = '';
+    remainingTime = 0;
+    updateTimerDisplay();
+}
+
+function restartTimer() {
+    stopTimer();
+    startTimer();
+}
+
+// Event listeners for buttons
+document.getElementById('start-btn').addEventListener('click', startTimer);
+document.getElementById('stop-btn').addEventListener('click', stopTimer);
+document.getElementById('reset-btn').addEventListener('click', resetTimer);
+document.getElementById('restart-btn').addEventListener('click', restartTimer);
+
+// Initialize the timer display
+updateTimerDisplay();
+
+</script>

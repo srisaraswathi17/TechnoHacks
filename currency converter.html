@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Currency Converter</h1>
+        <div class="converter">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" placeholder="Enter amount" />
+
+            <label for="fromCurrency">From Currency:</label>
+            <select id="fromCurrency">
+                <!-- Currency options will be added dynamically -->
+            </select>
+
+            <label for="toCurrency">To Currency:</label>
+            <select id="toCurrency">
+                <!-- Currency options will be added dynamically -->
+            </select>
+
+            <button onclick="convertCurrency()">Convert</button>
+
+            <div id="result">
+                <p id="conversionResult">Converted Amount: </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url("https://media.istockphoto.com/id/900778652/photo/international-banknotes-from-world-major-countries-using-as-forex-or-financial-economy.jpg?s=612x612&w=0&k=20&c=xJVjui3DIVu2azoz3CT3cEpRM0ghteJCD_jQ7D1HYtg=");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    background-color:  rgb(251, 242, 226);
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.converter {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 10px 0 5px;
+}
+
+input, select, button {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#result {
+    margin-top: 20px;
+}
+
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const fromCurrencySelect = document.getElementById('fromCurrency');
+    const toCurrencySelect = document.getElementById('toCurrency');
+
+    const currencies = ['USD', 'EUR', 'INR', 'JPY', 'AUD', 'CAD']; // Example currencies
+    currencies.forEach(currency => {
+        let option = document.createElement('option');
+        option.value = currency;
+        option.textContent = currency;
+        fromCurrencySelect.appendChild(option);
+        toCurrencySelect.appendChild(option.cloneNode(true));
+    });
+
+    async function convertCurrency() {
+        const amount = document.getElementById('amount').value;
+        const fromCurrency = fromCurrencySelect.value;
+        const toCurrency = toCurrencySelect.value;
+        const resultElement = document.getElementById('conversionResult');
+
+        if (amount === '' || fromCurrency === '' || toCurrency === '') {
+            resultElement.textContent = 'Please fill in all fields.';
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${fromCurrency}`);
+            const data = await response.json();
+            const rate = data.rates[toCurrency];
+            const convertedAmount = (amount * rate).toFixed(2);
+            resultElement.textContent = `Converted Amount: ${convertedAmount} ${toCurrency}`;
+        } catch (error) {
+            resultElement.textContent = 'Error fetching conversion rates.';
+        }
+    }
+
+    window.convertCurrency = convertCurrency;
+});
+
+</script>

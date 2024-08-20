@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TECHNO</h1>
+       <center><h2> A National Level Symposium</h2></center>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+                <span class="error" id="nameError"></span>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+                <span class="error" id="emailError"></span>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required>
+                <span class="error" id="phoneError"></span>
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <select id="department" name="department" required>
+                    <option value="">Select your department</option>
+                    <option value="CSE">CSE</option>
+                    <option value="IT">IT</option>
+                    <option value="ECE">ECE</option>
+                    <option value="MECH">MECH</option>
+                    <option value="CIVIL">CIVIL</option>
+                </select>
+                <span class="error" id="departmentError"></span>
+            </div>
+            <div class="form-group">
+                <label for="events">Events</label>
+                <select id="events" name="events" required>
+                    <option value="">Select Events</option>
+                    <option value="Tech Quiz">Tech quiz</option>
+                    <option value="Connections">connections</option>
+                    <option value="Hackathon">Hackathon</option>
+                    <option value="Treasure hunt">Treasure hunt</option>
+                    <option value="Photography">Photography</option>
+                </select>
+                <span class="error" id="eventsError"></span>
+            </div>
+           <center> <button type="submit">Register</button></center>
+           </div>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-image:-webkit-image-set("https://4kwallpapers.com/images/wallpapers/neon-background-1920x1080-12487.jpg");
+    display:flex;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    
+}
+
+.container {
+    background-color:rgb(17, 0, 0);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px whitesmoke;
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: whitesmoke;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: whitesmoke;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    color: black;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color:whitesmoke;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid whitesmoke;
+    border-radius: 4px;
+    color: black;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+    
+}
+
+button {
+    background-color:rgb(23, 125, 228);
+    color:whitesmoke;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color:rgb(55, 225, 111);
+    
+}
+
+.error {
+    color: red;
+    font-size: 0.875em;
+    display: block;
+    margin-top: 5px;
+}
+
+</style>
+
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+    // Prevent form submission
+    event.preventDefault();
+
+    // Clear previous error messages
+    clearErrors();
+
+    // Get form elements
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const department = document.getElementById('department').value;
+    const events = document.getElementById('events').value;
+    
+    let isValid = true;
+
+    // Name validation
+    if (name === '') {
+        showError('nameError', 'Full Name is required.');
+        isValid = false;
+    }
+
+    // Email validation
+    if (email === '') {
+        showError('emailError', 'Email Address is required.');
+        isValid = false;
+    } else if (!validateEmail(email)) {
+        showError('emailError', 'Invalid email format.');
+        isValid = false;
+    }
+
+    // Phone validation
+    if (phone === '') {
+        showError('phoneError', 'Phone Number is required.');
+        isValid = false;
+    } else if (!/^\d{10}$/.test(phone)) {
+        showError('phoneError', 'Phone Number must be 10 digits.');
+        isValid = false;
+    }
+
+    // Department validation
+    if (department === '') {
+        showError('departmentError', 'Department is required.');
+        isValid = false;
+    }
+
+    if (isValid) {
+        alert('Form submitted successfully!');
+        // Here you can add code to submit the form data to the server
+        // For example: this.submit();
+    }
+});
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function showError(elementId, message) {
+    document.getElementById(elementId).innerText = message;
+}
+
+function clearErrors() {
+    const errorElements = document.querySelectorAll('.error');
+    errorElements.forEach(el => el.innerText = '');
+}
+
+</script>
